@@ -122,7 +122,7 @@ return (
           </div>
 
           <div className="card-value">
-            ${todayRevenue}
+            {todayRevenue} смн
           </div>
         </div>
 
@@ -164,7 +164,7 @@ return (
             </div>
 
             <div className="price">
-              ${b.price}
+              {b.price} смн
             </div>
           </div>
         ))}
