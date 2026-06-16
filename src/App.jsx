@@ -249,3 +249,308 @@ return (
         </button>
 
       </div>
+<h2>Записи</h2>      {bookings.length === 0 && (
+        <div className="card">
+          Нет записей
+        </div>
+      )}
+
+      {bookings.map(b => (
+        <div
+          key={b.id}
+          className="booking-card"
+        >
+          <div className="client-name">
+            {b.client}
+          </div>
+
+          <div className="service">
+            {b.service}
+          </div>
+
+          <div className="service">
+            {b.master}
+          </div>
+
+          <div className="service">
+            {b.date} • {b.time}
+          </div>
+
+          <div className="price">
+            ${b.price}
+          </div>
+
+          <div className="row">
+
+            <a
+              href={`https://wa.me/${b.phone.replace(/\D/g,"")}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <button className="btn btn-primary">
+                WhatsApp
+              </button>
+            </a>
+
+            <button
+              className="btn btn-danger"
+              onClick={() =>
+                deleteBooking(b.id)
+              }
+            >
+              Удалить
+            </button>
+
+          </div>
+        </div>
+      ))}
+
+    </div>
+  )}
+
+  {tab === "clients" && (
+    <div className="section">
+
+      <h2>Клиенты</h2>
+
+      {[
+        ...new Map(
+          bookings.map(b => [
+            b.phone,
+            b
+          ])
+        ).values()
+      ].map(client => (
+        <div
+          key={client.phone}
+          className="booking-card"
+        >
+          <div className="client-name">
+            {client.client}
+          </div>
+
+          <div className="service">
+            {client.phone}
+          </div>
+
+          <div className="row">
+            <a
+              href={`https://wa.me/${client.phone.replace(/\D/g,"")}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <button className="btn btn-primary">
+                WhatsApp
+              </button>
+            </a>
+          </div>
+        </div>
+      ))}
+
+    </div>
+  )}
+
+  {tab === "settings" && (
+    <Settings
+      settings={settings}
+      setSettings={setSettings}
+    />
+  )}
+
+  <div className="bottom-nav">
+
+    <button
+      className={`nav-btn ${
+        tab === "home"
+          ? "active"
+          : ""
+      }`}
+      onClick={() =>
+        setTab("home")
+      }
+    >
+      🏠
+    </button>
+
+    <button
+      className={`nav-btn ${
+        tab === "bookings"
+          ? "active"
+          : ""
+      }`}
+      onClick={() =>
+        setTab("bookings")
+      }
+    >
+      📅
+    </button>
+
+    <button
+      className={`nav-btn ${
+        tab === "clients"
+          ? "active"
+          : ""
+      }`}
+      onClick={() =>
+        setTab("clients")
+      }
+    >
+      👤
+    </button>
+
+    <button
+      className={`nav-btn ${
+        tab === "settings"
+          ? "active"
+          : ""
+      }`}
+      onClick={() =>
+        setTab("settings")
+      }
+    >
+      ⚙️
+    </button>
+
+  </div>
+
+</div>
+
+);
+}
+
+function Settings({
+settings,
+setSettings
+}) {
+const [master, setMaster] =
+useState("");
+
+const [service, setService] =
+useState("");
+
+const [price, setPrice] =
+useState("");
+
+const addMaster = () => {
+if (!master) return;
+
+setSettings({
+  ...settings,
+  masters: [
+    ...settings.masters,
+    master
+  ]
+});
+
+setMaster("");
+
+};
+
+const addService = () => {
+if (!service || !price)
+return;
+
+setSettings({
+  ...settings,
+  services: [
+    ...settings.services,
+    {
+      name: service,
+      price: Number(price)
+    }
+  ]
+});
+
+setService("");
+setPrice("");
+
+};
+
+return (
+<div className="section">
+
+  <h2>Мастера</h2>
+
+  <input
+    className="input"
+    value={master}
+    placeholder="Имя мастера"
+    onChange={e =>
+      setMaster(e.target.value)
+    }
+  />
+
+  <button
+    className="btn btn-primary"
+    onClick={addMaster}
+  >
+    Добавить мастера
+  </button>
+
+  <div
+    style={{
+      marginTop: 15
+    }}
+  >
+    {settings.masters.map(m => (
+      <div
+        key={m}
+        className="booking-card"
+      >
+        {m}
+      </div>
+    ))}
+  </div>
+
+  <h2
+    style={{
+      marginTop: 25
+    }}
+  >
+    Услуги
+  </h2>
+
+  <input
+    className="input"
+    value={service}
+    placeholder="Название услуги"
+    onChange={e =>
+      setService(e.target.value)
+    }
+  />
+
+  <input
+    className="input"
+    value={price}
+    placeholder="Цена"
+    onChange={e =>
+      setPrice(e.target.value)
+    }
+  />
+
+  <button
+    className="btn btn-primary"
+    onClick={addService}
+  >
+    Добавить услугу
+  </button>
+
+  <div
+    style={{
+      marginTop: 15
+    }}
+  >
+    {settings.services.map(s => (
+      <div
+        key={s.name}
+        className="booking-card"
+      >
+        {s.name} — ${s.price}
+      </div>
+    ))}
+  </div>
+
+</div>
+
+);
+}
