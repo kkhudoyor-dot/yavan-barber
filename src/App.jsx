@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-const MASTERS = ["Алишер", "Баходур", "Фирдавс"];
+const MASTERS = ["ХУДОЁР"];
 const SERVICES = [
   { name: "Стрижка", price: 20, duration: 30 },
   { name: "Стрижка + борода", price: 35, duration: 50 },
