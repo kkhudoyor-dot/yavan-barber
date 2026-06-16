@@ -1,0 +1,151 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  }
+
+body {
+background: #0f1115;
+color: #fff;
+font-family: Inter, Arial, sans-serif;
+}
+
+.app {
+min-height: 100vh;
+background: #0f1115;
+padding-bottom: 90px;
+}
+
+.header {
+padding: 20px;
+}
+
+.logo {
+font-size: 24px;
+font-weight: 700;
+}
+
+.subtitle {
+color: #9ca3af;
+margin-top: 4px;
+}
+
+.stats {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 12px;
+padding: 0 20px;
+}
+
+.card {
+background: #1a1d24;
+border-radius: 18px;
+padding: 16px;
+}
+
+.card-title {
+color: #9ca3af;
+font-size: 13px;
+}
+
+.card-value {
+font-size: 24px;
+font-weight: 700;
+margin-top: 8px;
+}
+
+.section {
+padding: 20px;
+}
+
+.section h2 {
+margin-bottom: 15px;
+}
+
+.booking-card {
+background: #1a1d24;
+border-radius: 18px;
+padding: 16px;
+margin-bottom: 12px;
+}
+
+.client-name {
+font-size: 18px;
+font-weight: 600;
+}
+
+.service {
+color: #9ca3af;
+margin-top: 4px;
+}
+
+.price {
+color: #3b82f6;
+font-weight: bold;
+margin-top: 6px;
+}
+
+.row {
+display: flex;
+gap: 10px;
+margin-top: 12px;
+}
+
+.btn {
+border: none;
+border-radius: 12px;
+padding: 10px 14px;
+cursor: pointer;
+}
+
+.btn-primary {
+background: #3b82f6;
+color: white;
+}
+
+.btn-danger {
+background: #ef4444;
+color: white;
+}
+
+.input,
+.select {
+width: 100%;
+padding: 12px;
+border-radius: 12px;
+border: none;
+background: #1a1d24;
+color: white;
+margin-bottom: 10px;
+}
+
+.bottom-nav {
+position: fixed;
+bottom: 0;
+left: 0;
+right: 0;
+height: 70px;
+background: #1a1d24;
+display: flex;
+justify-content: space-around;
+align-items: center;
+border-top: 1px solid #2d3748;
+}
+
+.nav-btn {
+background: transparent;
+border: none;
+color: #9ca3af;
+font-size: 14px;
+}
+
+.nav-btn.active {
+color: #3b82f6;
+}
+
+.add-form {
+background: #1a1d24;
+border-radius: 18px;
+padding: 15px;
+margin-bottom: 20px;
+}
