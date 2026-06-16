@@ -1,41 +1,47 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import "./styles.css";
 
 const defaultSettings = {
-openTime: "09:00",
-closeTime: "20:00",
 masters: ["ХУДОЁР"],
 services: [
 { name: "Стрижка", price: 20 },
-{ name: "Стрижка + борода", price: 35 },
+{ name: "Стрижка + Борода", price: 35 },
 { name: "Борода", price: 15 }
 ]
 };
 
 export default function App() {
-const [tab, setTab] = useState("bookings");
+const [tab, setTab] = useState("home");
 
 const [settings, setSettings] = useState(() => {
-return JSON.parse(localStorage.getItem("settings")) || defaultSettings;
+return (
+JSON.parse(localStorage.getItem("settings")) ||
+defaultSettings
+);
 });
 
 const [bookings, setBookings] = useState(() => {
-return JSON.parse(localStorage.getItem("bookings")) || [];
+return (
+JSON.parse(localStorage.getItem("bookings")) ||
+[]
+);
 });
 
 const [client, setClient] = useState("");
 const [phone, setPhone] = useState("");
-const [master, setMaster] = useState(settings.masters[0] || "");
+const [master, setMaster] = useState(
+settings.masters[0] || ""
+);
+
 const [service, setService] = useState(
 settings.services[0]?.name || ""
 );
+
 const [date, setDate] = useState(
 new Date().toISOString().split("T")[0]
 );
-const [time, setTime] = useState("10:00");
 
-const [newMaster, setNewMaster] = useState("");
-const [newService, setNewService] = useState("");
-const [newPrice, setNewPrice] = useState("");
+const [time, setTime] = useState("10:00");
 
 useEffect(() => {
 localStorage.setItem(
@@ -54,9 +60,10 @@ JSON.stringify(bookings)
 const addBooking = () => {
 if (!client || !phone) return;
 
-const selectedService = settings.services.find(
-  s => s.name === service
-);
+const selectedService =
+  settings.services.find(
+    s => s.name === service
+  );
 
 const booking = {
   id: Date.now(),
@@ -77,114 +84,101 @@ setPhone("");
 };
 
 const deleteBooking = id => {
-setBookings(bookings.filter(b => b.id !== id));
+setBookings(
+bookings.filter(b => b.id !== id)
+);
 };
 
-const addMaster = () => {
-if (!newMaster) return;
-
-setSettings({
-  ...settings,
-  masters: [...settings.masters, newMaster]
-});
-
-setNewMaster("");
-
-};
-
-const removeMaster = name => {
-setSettings({
-...settings,
-masters: settings.masters.filter(
-m => m !== name
-)
-});
-};
-
-const addService = () => {
-if (!newService || !newPrice) return;
-
-setSettings({
-  ...settings,
-  services: [
-    ...settings.services,
-    {
-      name: newService,
-      price: Number(newPrice)
-    }
-  ]
-});
-
-setNewService("");
-setNewPrice("");
-
-};
-
-const removeService = name => {
-setSettings({
-...settings,
-services: settings.services.filter(
-s => s.name !== name
-)
-});
-};
-
-const today = new Date()
-.toISOString()
-.split("T")[0];
+const today =
+new Date().toISOString().split("T")[0];
 
 const todayRevenue = bookings
 .filter(b => b.date === today)
 .reduce((sum, b) => sum + b.price, 0);
 
+const clientsCount = new Set(
+bookings.map(b => b.phone)
+).size;
+
 return (
-<div
-style={{
-background: "#111",
-color: "white",
-minHeight: "100vh",
-padding: 20,
-fontFamily: "sans-serif"
-}}
->
-<h1>ЯВАН БАРБЕР CRM</h1>
+<div className="app">
 
-  <div style={{ marginTop: 20 }}>
-    <button onClick={() => setTab("bookings")}>
-      Записи
-    </button>
+  <div className="header">
+    <div className="logo">
+      ЯВАН БАРБЕР CRM
+    </div>
 
-    <button
-      onClick={() => setTab("clients")}
-      style={{ marginLeft: 10 }}
-    >
-      Клиенты
-    </button>
-
-    <button
-      onClick={() => setTab("settings")}
-      style={{ marginLeft: 10 }}
-    >
-      Настройки
-    </button>
+    <div className="subtitle">
+      Управление барбершопом
+    </div>
   </div>
 
-  <hr style={{ margin: "20px 0" }} />
+  {tab === "home" && (
+    <>
+      <div className="stats">
+        <div className="card">
+          <div className="card-title">
+            Доход сегодня
+          </div>
+
+          <div className="card-value">
+            ${todayRevenue}
+          </div>
+        </div>
+
+        <div className="card">
+          <div className="card-title">
+            Клиенты
+          </div>
+
+          <div className="card-value">
+            {clientsCount}
+          </div>
+        </div>
+      </div>
+
+      <div className="section">
+        <h2>Последние записи</h2>
+
+        {bookings.length === 0 && (
+          <div className="card">
+            Пока нет записей
+          </div>
+        )}
+
+        {bookings.slice(0, 5).map(b => (
+          <div
+            key={b.id}
+            className="booking-card"
+          >
+            <div className="client-name">
+              {b.client}
+            </div>
+
+            <div className="service">
+              {b.service}
+            </div>
+
+            <div className="service">
+              {b.date} • {b.time}
+            </div>
+
+            <div className="price">
+              ${b.price}
+            </div>
+          </div>
+        ))}
+      </div>
+    </>
+  )}
 
   {tab === "bookings" && (
-    <>
-      <h2>
-        Доход сегодня: ${todayRevenue}
-      </h2>
+    <div className="section">
 
-      <div
-        style={{
-          display: "grid",
-          gap: 10,
-          marginTop: 20
-        }}
-      >
+      <div className="add-form">
+
         <input
+          className="input"
           placeholder="Клиент"
           value={client}
           onChange={e =>
@@ -193,6 +187,7 @@ fontFamily: "sans-serif"
         />
 
         <input
+          className="input"
           placeholder="Телефон"
           value={phone}
           onChange={e =>
@@ -201,17 +196,21 @@ fontFamily: "sans-serif"
         />
 
         <select
+          className="select"
           value={master}
           onChange={e =>
             setMaster(e.target.value)
           }
         >
           {settings.masters.map(m => (
-            <option key={m}>{m}</option>
+            <option key={m}>
+              {m}
+            </option>
           ))}
         </select>
 
         <select
+          className="select"
           value={service}
           onChange={e =>
             setService(e.target.value)
@@ -225,6 +224,7 @@ fontFamily: "sans-serif"
         </select>
 
         <input
+          className="input"
           type="date"
           value={date}
           onChange={e =>
@@ -233,6 +233,7 @@ fontFamily: "sans-serif"
         />
 
         <input
+          className="input"
           type="time"
           value={time}
           onChange={e =>
@@ -240,160 +241,11 @@ fontFamily: "sans-serif"
           }
         />
 
-        <button onClick={addBooking}>
+        <button
+          className="btn btn-primary"
+          onClick={addBooking}
+        >
           Добавить запись
         </button>
+
       </div>
-
-      <h2 style={{ marginTop: 30 }}>
-        Все записи
-      </h2>
-
-      {bookings.map(b => (
-        <div
-          key={b.id}
-          style={{
-            border: "1px solid #444",
-            padding: 10,
-            marginTop: 10
-          }}
-        >
-          <b>{b.client}</b>
-
-          <p>{b.phone}</p>
-
-          <p>{b.master}</p>
-
-          <p>{b.service}</p>
-
-          <p>${b.price}</p>
-
-          <p>
-            {b.date} {b.time}
-          </p>
-
-          <a
-            href={`https://wa.me/${b.phone.replace(/\D/g,"")}`}
-            target="_blank"
-          >
-            WhatsApp
-          </a>
-
-          <button
-            onClick={() =>
-              deleteBooking(b.id)
-            }
-            style={{
-              marginLeft: 10
-            }}
-          >
-            Удалить
-          </button>
-        </div>
-      ))}
-    </>
-  )}
-
-  {tab === "clients" && (
-    <>
-      <h2>Клиенты</h2>
-
-      {[
-        ...new Map(
-          bookings.map(b => [
-            b.phone,
-            b
-          ])
-        ).values()
-      ].map(c => (
-        <div
-          key={c.phone}
-          style={{
-            border: "1px solid #444",
-            padding: 10,
-            marginTop: 10
-          }}
-        >
-          <b>{c.client}</b>
-
-          <p>{c.phone}</p>
-        </div>
-      ))}
-    </>
-  )}
-
-  {tab === "settings" && (
-    <>
-      <h2>Мастера</h2>
-
-      <input
-        value={newMaster}
-        onChange={e =>
-          setNewMaster(e.target.value)
-        }
-        placeholder="Имя мастера"
-      />
-
-      <button onClick={addMaster}>
-        Добавить
-      </button>
-
-      {settings.masters.map(m => (
-        <div key={m}>
-          {m}
-          <button
-            onClick={() =>
-              removeMaster(m)
-            }
-          >
-            Удалить
-          </button>
-        </div>
-      ))}
-
-      <h2
-        style={{
-          marginTop: 30
-        }}
-      >
-        Услуги
-      </h2>
-
-      <input
-        placeholder="Услуга"
-        value={newService}
-        onChange={e =>
-          setNewService(e.target.value)
-        }
-      />
-
-      <input
-        placeholder="Цена"
-        value={newPrice}
-        onChange={e =>
-          setNewPrice(e.target.value)
-        }
-      />
-
-      <button onClick={addService}>
-        Добавить
-      </button>
-
-      {settings.services.map(s => (
-        <div key={s.name}>
-          {s.name} - ${s.price}
-          <button
-            onClick={() =>
-              removeService(s.name)
-            }
-          >
-            Удалить
-          </button>
-        </div>
-      ))}
-    </>
-  )}
-</div>
-
-);
-        }
